@@ -1,0 +1,35 @@
+
+name: Advent of Code 2015
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 2015
+      
+jobs:
+  run-scripts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Typescript
+        run: npm install -g typescript tsx
+
+      - name: Execute scripts
+        run: |
+          set -e
+          for i in {01..25}
+          do
+            if [ -f "$i/code.ts" ]; then
+              echo "Advent of code day $i"
+              npx tsx $i/code.ts
+            fi
+          done
