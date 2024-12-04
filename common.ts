@@ -2,9 +2,10 @@
 import { readFileSync } from "fs";
 
 export const getInput = (day: string): string => readFileSync(`./${day}/input.txt`, 'utf-8');
-export const getLines = (day: string) => getInput(day).split("\n");
+export const getLines = (day: string, split = '\n') => getInput(day).split(split);
+export const getMatrix = (day: string, splitRow = '\n', splitCol = '') => getLines(day, splitRow).map((row) => row.split(splitCol));
 
-export const perfs = (part1: () => void, part2: () => void) => {
+export const perfs = (part1: () => void, part2?: () => void) => {
 
 	performance.mark('start');
 	performance.mark('start_part1');
@@ -12,7 +13,7 @@ export const perfs = (part1: () => void, part2: () => void) => {
 
 	performance.mark('end_part1');
 	performance.mark('start_part2');
-	const p2res = part2();
+	const p2res = part2?.();
 
 	performance.mark('end_part2');
 	performance.mark('end');
