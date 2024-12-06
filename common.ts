@@ -1,9 +1,18 @@
 
-import { readFileSync } from "fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
+import { dirname } from "path";
 
-export const getInput = (day: string): string => readFileSync(`./${day}/input.txt`, 'utf-8');
-export const getLines = (day: string, split = '\n') => getInput(day).split(split);
-export const getMatrix = (day: string, splitRow = '\n', splitCol = '') => getLines(day, splitRow).map((row) => row.split(splitCol));
+export const getInput = <T extends string>(day: `${number}`): T => readFileSync(`./${day}/input.txt`, 'utf-8') as T;
+export const getLines = <T extends string[]>(day: `${number}`, split = '\n'): T => getInput(day).split(split) as T;
+export const getMatrix = <T extends string[][]>(day: `${number}`, splitRow = '\n', splitCol = ''): T => getLines(day, splitRow).map((row) => row.split(splitCol)) as T;
+
+export const outputToFile = (text: string, day: `${number}`, p: 'part1' | 'part2', name?: string) => {
+	const filename = `./${day}/${p}${name ?? ''}.txt`;
+	const dir = dirname(filename);
+
+	if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+	writeFileSync(filename, text);
+}
 
 export const perfs = (part1: () => void, part2?: () => void) => {
 
