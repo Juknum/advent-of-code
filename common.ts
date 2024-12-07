@@ -35,6 +35,6 @@ export const perfs = (part1: () => void, part2?: () => void) => {
 
 	console.log(`Part 1 (${measures[1].duration.toPrecision(4)} ms) :`, p1res);
 	console.log(`Part 2 (${measures[2].duration.toPrecision(4)} ms) :`, p2res);
-	console.log(`Total  (${measures[0].duration.toPrecision(5)} ms)`);
+	console.log(`Total  (${measures[0].duration} ms)`);
 
 }
