@@ -14,27 +14,24 @@ export const outputToFile = (text: string, day: `${number}`, p: 'part1' | 'part2
 	writeFileSync(filename, text);
 }
 
-export const perfs = (part1: () => void, part2?: () => void) => {
-
+export const perfs = (...parts: Array<() => void>) => {
 	performance.mark('start');
-	performance.mark('start_part1');
-	const p1res = part1();
 
-	performance.mark('end_part1');
-	performance.mark('start_part2');
-	const p2res = part2?.();
+	const res: unknown[] = [];
+	
+	parts.forEach((part, i) => {
+		performance.mark(`start_part${i + 1}`);
+		res.push(part());
+		performance.mark(`end_part${i + 1}`);
+	});
 
-	performance.mark('end_part2');
 	performance.mark('end');
 
 	performance.measure('runtime', 'start', 'end');
-	performance.measure('part1', 'start_part1', 'end_part1');
-	performance.measure('part2', 'start_part2', 'end_part2');
+	parts.forEach((_, i) => performance.measure(`part${i + 1}`, `start_part${i + 1}`, `end_part${i + 1}`));
 
-	const measures = performance.getEntriesByType('measure');
+	const measures = performance.getEntriesByType('measure').filter((measure) => measure.name !== 'runtime');
 
-	console.log(`Part 1 (${measures[1].duration.toPrecision(4)} ms) :`, p1res);
-	console.log(`Part 2 (${measures[2].duration.toPrecision(4)} ms) :`, p2res);
-	console.log(`Total  (${measures[0].duration} ms)`);
-
+	measures.forEach((measure, i) => console.log(`(${measure.duration.toPrecision(4)} ms) :`, res[i]));
+	console.log(`Total  (${performance.getEntriesByName('runtime')[0].duration} ms)`);
 }
